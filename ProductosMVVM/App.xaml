@@ -1,0 +1,38 @@
+﻿<Application x:Class="ProductosMVVM.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ProductosMVVM"  
+             xmlns:vm="clr-namespace:ProductosMVVM.ViewModels"
+             xmlns:v="clr-namespace:ProductosMVVM.Views"
+           >
+    <Application.Resources>
+        <ResourceDictionary>
+ 
+            <DataTemplate DataType="{x:Type vm:MainViewModel}">
+                <v:MainWindow/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+                <v:HomeView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ViewOneModel}">
+                <v:ViewOne/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ViewTwoModel}">
+                <v:ViewTwo/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                <v:SettingsWindow/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:GraphicsViewModel}">
+                <v:ViewGraphics/>
+            </DataTemplate>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/Light/LightTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Light/LightStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+     
+            
+    </Application.Resources>
+</Application>
