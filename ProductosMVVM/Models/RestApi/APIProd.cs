@@ -1,5 +1,4 @@
-﻿using ProductosMVVM.Models.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -52,24 +51,19 @@ namespace ProductosMVVM.Models.RestApi
                         JsonElement array = doc.RootElement;
                         foreach (JsonElement jsonProduct in array.EnumerateArray())
                         {
-                            try
-                            {  
+                           if (!jsonProduct.GetProperty("images")[0].GetString().Contains('<')) {
                                 Producto producto = new Producto
-                            {
-                               
-                                Nombre = jsonProduct.GetProperty("title").GetString(),
-                                Descripcion = jsonProduct.GetProperty("description").GetString(),
-                                Precio = jsonProduct.GetProperty("price").GetInt32(),
-                                IdCategoria = jsonProduct.GetProperty("category").GetProperty("id").GetInt32(),
-                                IdProducto = jsonProduct.GetProperty("id").GetInt32(),
-                                Imagen = jsonProduct.GetProperty("images")[0].GetString()
-                            };
-                            deAPI.Add(producto);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show(ex.Message);
-                            }
+                                {
+
+                                    Nombre = jsonProduct.GetProperty("title").GetString(),
+                                    Descripcion = jsonProduct.GetProperty("description").GetString(),
+                                    Precio = jsonProduct.GetProperty("price").GetInt32(),
+                                    IdCategoria = jsonProduct.GetProperty("category").GetProperty("id").GetInt32(),
+                                    IdProducto = jsonProduct.GetProperty("id").GetInt32(),
+                                    Imagen = jsonProduct.GetProperty("images")[0].GetString()
+                                };
+                                deAPI.Add(producto);
+                            }                       
                         }
 
                     }
@@ -77,7 +71,7 @@ namespace ProductosMVVM.Models.RestApi
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(@"\tERROR {0}", ex.Message);
+                MessageBox.Show(ex.Message);
             }
 
             return deAPI;

@@ -40,7 +40,7 @@ namespace ProductosMVVM.Models.RestApi
             Uri uri = new Uri(string.Format("https://api.escuelajs.co/api/v1/categories", string.Empty));
             try
             {
-
+               
                 HttpResponseMessage response = await _httpClient.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
@@ -52,15 +52,17 @@ namespace ProductosMVVM.Models.RestApi
                         JsonElement array = doc.RootElement;
                         foreach (JsonElement jsonProduct in array.EnumerateArray())
                         {
-                           
-                          Categoria producto = new Categoria
-                             {
+                            if (!jsonProduct.GetProperty("name").GetString().Contains("string"))
+                            {
+
+                                Categoria producto = new Categoria
+                                {
                                     Nombre = jsonProduct.GetProperty("name").GetString(),
                                     Id = jsonProduct.GetProperty("id").GetInt32()
-                             };
-                          deAPI.Add(producto);
+                                };
+                                deAPI.Add(producto);
+                            }
                         }
-
                     }
                 }
             }

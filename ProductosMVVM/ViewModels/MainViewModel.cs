@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ProductosMVVM.Models.Repositories;
 using ProductosMVVM.Models.Services;
 using ProductosMVVM.Models.Dataclasses;
 using Microsoft.Identity.Client;

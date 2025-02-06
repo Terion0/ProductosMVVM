@@ -16,26 +16,37 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ProductosMVVM.ViewModels
 {
-    internal partial class GraphicsViewModel(GraphicsService services) : ObservableObject
+    internal partial class GraphicsViewModel : ObservableObject
     {
-        [ObservableProperty]
-        public ISeries[] _PieChart = services.DevolverPieSeries();
+        private readonly GraphicsService servicesG;
 
-        [ObservableProperty]
-        public ISeries[] _Series = services.DevolverValores();
-
-        [ObservableProperty]
-        public Axis[] _XAxes = services.DevolverEjeX();
-
-
-        [RelayCommand]
-        public void ActCharts()
+        public GraphicsViewModel(GraphicsService services)
         {
-            PieChart = services.DevolverPieSeries();
-            Series = services.DevolverValores();
-            XAxes = services.DevolverEjeX();
+            servicesG = services;
+            LoadCharts();
         }
 
+        [ObservableProperty]
+        private ISeries[] _pieChart;
+
+        [ObservableProperty]
+        private ISeries[] _series;
+
+        [ObservableProperty]
+        private Axis[] _xAxes;
+
+        [RelayCommand]
+        public async Task ActCharts()
+        {
+            await LoadCharts();
+        }
+
+        private async Task LoadCharts()
+        {
+            PieChart = await servicesG.DevolverPieSeries();
+            Series = await servicesG.DevolverValores();
+            XAxes = await servicesG.DevolverEjeX();
+        }
     }
 }
 
