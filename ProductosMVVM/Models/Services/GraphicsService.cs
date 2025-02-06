@@ -3,6 +3,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using ProductosMVVM.Models.Dataclasses;
 using ProductosMVVM.Models.Repositories;
+using ProductosMVVM.Models.RestApi;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ProductosMVVM.Models.Services
 {
-    internal class GraphicsService(IRepository<Categoria> Rcat, IRepository<Producto> Rprod)
+    internal class GraphicsService(IAPIRest<Categoria> categories, IRepository<Producto> Rprod)
     {
         public ISeries[] DevolverPieSeries()
         {

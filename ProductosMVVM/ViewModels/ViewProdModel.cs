@@ -13,18 +13,20 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProductosMVVM.Models.Dataclasses;
 using ProductosMVVM.Models.Repositories;
+using ProductosMVVM.Models.RestApi;
 using ProductosMVVM.Models.Services;
 namespace ProductosMVVM.ViewModels
 {
-    partial class ViewOneModel(IServices<Categoria> servicesC, IServices<Producto> servicesP) : ObservableObject
+    partial class ViewOneModel : ObservableObject
     {
+        private readonly IAPIRest<Producto> servicesP;
 
         [ObservableProperty]
         public Producto _ProductoSeleccionado;
         [ObservableProperty]
         public Categoria _CategoriaSeleccionada;
         [ObservableProperty]
-        public ObservableCollection<Producto> _ListaProductos = new(servicesP.GetAll());
+        public ObservableCollection<Producto> _ListaProductos;
 
 
         [ObservableProperty]
@@ -40,7 +42,20 @@ namespace ProductosMVVM.ViewModels
         [ObservableProperty]
         public string _ImagenProd = "";
 
+        public ViewOneModel(IAPIRest<Producto> servicesP)
+        {
+            this.servicesP = servicesP;
+            Sinchronice();
 
+        }
+
+        private async  void Sinchronice() 
+        {
+           var aDevolver = await servicesP.GetAll();
+           
+            ListaProductos = new ObservableCollection<Producto>(aDevolver);
+           
+        }
 
         [RelayCommand]
         private void EliminarProducto()
@@ -60,8 +75,8 @@ namespace ProductosMVVM.ViewModels
             {
                 if (ProductoSeleccionado != null)
                 {
-                    Categoria c = servicesC.Get(cat);
-                    ProductoSeleccionado.IdCategoria = c.Id;
+               //     Categoria c = servicesC.Get(cat);
+               //     ProductoSeleccionado.IdCategoria = c.Id;
                     ProductoSeleccionado.Nombre = NombreProd;
                     ProductoSeleccionado.Precio= ConvertirADouble(PrecioProd);
                     ProductoSeleccionado.Descripcion=DescripcionProd;
@@ -76,14 +91,14 @@ namespace ProductosMVVM.ViewModels
             int cat = ConvertirAInt(IdCatProd);
             if (cat != -1)
             {
-                Categoria c = servicesC.Get(cat);
+              //  Categoria c = servicesC.Get(cat);
                 Producto p = new();
                 p.Nombre = NombreProd;
                 p.Precio= ConvertirADouble(PrecioProd);
                 p.Descripcion = DescripcionProd;
-                p.IdCategoria = c.Id;
+            //    p.IdCategoria = c.Id;
                 p.Imagen = "";
-                servicesP.Add(p);   
+             //   servicesP.Add(p);   
                 ProductoSeleccionado = null;
                 limpiar();
                
@@ -94,12 +109,12 @@ namespace ProductosMVVM.ViewModels
         [RelayCommand]
         private void MostrarInf(Producto sender) 
         {
-            limpiar();
+            // limpiar();
             ProductoSeleccionado = sender;
             MostrarInfo();
         }
 
-        public void limpiar()
+        public async void limpiar()
         {
             string white = "";
             IdProd = white;
@@ -109,7 +124,7 @@ namespace ProductosMVVM.ViewModels
             DescripcionProd = white;
             ImagenProd = white; 
             ListaProductos.Clear();
-            ListaProductos = new ObservableCollection<Producto>(servicesP.GetAll());
+            ListaProductos = new ObservableCollection<Producto>( await servicesP.GetAll());
         }
         public void MostrarInfo()
         {

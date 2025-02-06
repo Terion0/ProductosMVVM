@@ -9,16 +9,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProductosMVVM.Models.Dataclasses;
 using ProductosMVVM.Models.Repositories;
+using ProductosMVVM.Models.RestApi;
 using ProductosMVVM.Models.Services;
 namespace ProductosMVVM.ViewModels
 {
-    partial class ViewTwoModel(IServices<Categoria> servicios) : ObservableObject
+    partial class ViewTwoModel: ObservableObject
     {
-
+        private readonly IAPIRest<Categoria> servicesC;
         [ObservableProperty]
         public Categoria _CategoriaSeleccionado;
         [ObservableProperty]
-        public ObservableCollection<Categoria> _ListaCategorias = new(servicios.GetAll());
+        public ObservableCollection<Categoria> _ListaCategorias;
 
 
         [ObservableProperty]
@@ -27,8 +28,19 @@ namespace ProductosMVVM.ViewModels
         public string _IdCat = "";
 
 
+        public ViewTwoModel(IAPIRest<Categoria> servicesC)
+        {
+            this.servicesC = servicesC;
+            Sinchronice();
 
+        }
+        private async void Sinchronice()
+        {
+            var aDevolver = await servicesC.GetAll();
 
+            ListaCategorias = new ObservableCollection<Categoria>(aDevolver);
+
+        }
         partial void OnCategoriaSeleccionadoChanged(Categoria value)
         {
             if (value != null)
@@ -40,7 +52,7 @@ namespace ProductosMVVM.ViewModels
         {
             if (CategoriaSeleccionado != null)
             {
-                servicios.Remove(CategoriaSeleccionado);
+                servicesC.Remove(CategoriaSeleccionado);
                 limpiar();
             }
         }
@@ -50,8 +62,8 @@ namespace ProductosMVVM.ViewModels
             if (CategoriaSeleccionado != null)
             {
           
-                CategoriaSeleccionado.Nombre = NombreCat;          
-                servicios.Update(CategoriaSeleccionado);
+                CategoriaSeleccionado.Nombre = NombreCat;
+                servicesC.Update(CategoriaSeleccionado);
                 limpiar();
              
               
@@ -65,17 +77,17 @@ namespace ProductosMVVM.ViewModels
         {
             Categoria c = new Categoria();
             c.Nombre=NombreCat;
-            servicios.Add(c);   
+         //   servicesC.Add(c);   
             CategoriaSeleccionado = null;
             limpiar();       
         }
-        public void limpiar()
+        public async void limpiar()
         {
            string white = "";
             NombreCat = white;
             IdCat = white;
             ListaCategorias.Clear();
-            ListaCategorias = new ObservableCollection<Categoria>(servicios.GetAll());
+            ListaCategorias = new ObservableCollection<Categoria>(await servicesC.GetAll());
         }
         public void MostrarInfo()
         {

@@ -12,10 +12,11 @@ using ProductosMVVM.Models.Services;
 using ProductosMVVM.Models.Dataclasses;
 using Microsoft.Identity.Client;
 using SkiaSharp;
+using ProductosMVVM.Models.RestApi;
 
 namespace ProductosMVVM.ViewModels
 {
-    partial class MainViewModel(IServices<Producto> serviciosP, IServices<Categoria> serviciosC, SettinsService settins, GraphicsService graphics): ObservableObject
+    partial class MainViewModel(SettinsService settins, GraphicsService graphics, IAPIRest<Producto> prodacts, IAPIRest<Categoria> categoris): ObservableObject
     {
 
 
@@ -24,9 +25,9 @@ namespace ProductosMVVM.ViewModels
 
         public HomeViewModel HomeViewModel;
 
-        public ViewOneModel ViewOneModel { get; } = new ViewOneModel(serviciosC,serviciosP);
+        public ViewOneModel ViewOneModel;
 
-        public ViewTwoModel ViewTwoModel { get; } = new ViewTwoModel(serviciosC);
+        public ViewTwoModel ViewTwoModel { get; } 
 
         public SettingsViewModel ViewSettings { get; } = new SettingsViewModel(settins);
 
@@ -36,13 +37,13 @@ namespace ProductosMVVM.ViewModels
 
 
         [RelayCommand]
-        private void ActivateHomeView() => ActiveView = new HomeViewModel(serviciosC, serviciosP);
+        private void ActivateHomeView() => ActiveView = new HomeViewModel(categoris, prodacts);
 
         [RelayCommand]
-        private void ActiveOneView() => ActiveView =  ViewOneModel;
+        private void ActiveOneView() => ActiveView = new ViewOneModel(prodacts);
 
         [RelayCommand]
-        private void ActiveTwoView() => ActiveView = ViewTwoModel;
+        private void ActiveTwoView() => ActiveView =  new ViewTwoModel(categoris);
 
         [RelayCommand]
         private void UnactivateView() => ActiveView = null;

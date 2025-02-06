@@ -9,6 +9,7 @@ using System.Windows;
 using ProductosMVVM.Data;
 using Microsoft.EntityFrameworkCore;
 using ProductosMVVM.Models.Services;
+using ProductosMVVM.Models.RestApi;
 
 namespace ProductosMVVM
 {
@@ -22,6 +23,8 @@ namespace ProductosMVVM
             ServiceCollection services = new();
             services.AddTransient<MainWindow>();
             services.AddTransient<MainViewModel>();
+            services.AddTransient<IAPIRest<Producto>, APIProd>();
+            services.AddTransient<IAPIRest<Categoria>, APICat>();
             services.AddScoped<IRepository<Producto>, Rproductos>();
             services.AddScoped<IRepository<Categoria>, Rcategoria>();
             services.AddScoped<IServices<Producto>, ProductoServicios>();
